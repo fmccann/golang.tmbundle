@@ -1,11 +1,14 @@
-## golang.tmbundle v3.1.0
+## golang.tmbundle v3.2.0
 (a TextMate 2 bundle for the go programming language)
 
 ### Installation
 TextMate by default will detect .go files and load [Jim Dovey's bundle](https://github.com/AlanQuatermain/go-tmbundle). This is a fork with additional improvements merged from around the community.
 
 Big changes from the default version:
-- all non-run go commands operate on the current directory instead of per file (thanks [tg](https://github.com/tg))
+- Suppport for goimports
+- Suppport for golint
+- Users can supply commands via ENV variables (TM_GO_DYNAMIC_GOPATH, TM_GO_DYNAMIC_PKG, TM_GO_DYNAMIC_PKG_PATH). The bundle will consult these commands if defined to dynamically change the gopath or package based on the current directory.
+- all non-run go commands operate on the current directory instead of per file if the package is not defined dynamically. (thanks [tg](https://github.com/tg)).
 - run and build work on unsaved files (thanks [tg](https://github.com/tg))
 - added print, println, printf, and fprintf snippets (thanks [jish](https://github.com/jish))
 - bugfixes
@@ -27,7 +30,7 @@ go get -u code.google.com/p/go.tools/cmd/godoc
 ```
 
 ### Features
-The bundle implements language syntax, completion via gocode, some snippets, and some compile/format/documentation commands for the [Go language](http://golang.org/). 
+The bundle implements language syntax, completion via gocode, some snippets, and some compile/format/documentation commands for the [Go language](http://golang.org/).
 
 ### Snippets
 
