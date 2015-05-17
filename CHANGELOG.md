@@ -4,9 +4,9 @@ Planned:
 
 ###3.2.0 / 2015-05-17
 - [Support for dynamically determining gopath, package name, and package path @fmccann](https://github.com/syscrusher/golang.tmbundle/commit/febf522da65f019057938edba7e30df273bff068)
-- [Allow run and build on unsaved files @tg](https://github.com/syscrusher/golang.tmbundle/commit/4809d74ea36654bdd9a2475ded6f729eb3082b65)
-- [Add fmt.Print snippet @jish](https://github.com/syscrusher/golang.tmbundle/commit/f73850c2774b1bbe6c7ecec40e4bbbb376fa1225)
-- [Add fmt.Fprintf snippet](https://github.com/syscrusher/golang.tmbundle/commit/ead451fa74a98628ddeb50ab6d901be18b60bba7)
+- [Support for golint @fmccann](https://github.com/syscrusher/golang.tmbundle/commit/febf522da65f019057938edba7e30df273bff068)
+- [Support for goimports @fmccann](https://github.com/syscrusher/golang.tmbundle/commit/febf522da65f019057938edba7e30df273bff068)
+- [Display package name when running command against package name @fmccann](https://github.com/syscrusher/golang.tmbundle/commit/febf522da65f019057938edba7e30df273bff068)
 
 ###3.1.0 / 2015-02-04
 - [Run all non-run commands against current directory @tg](https://github.com/syscrusher/golang.tmbundle/commit/d3f09ee3bbe5fba76964e1bdc23e7d7247b733ee)
