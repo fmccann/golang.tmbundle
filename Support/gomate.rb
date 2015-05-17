@@ -10,11 +10,19 @@ require "#{ENV['TM_SUPPORT_PATH']}/lib/tm/save_current_document"
 # TextMate's special GOPATH used in .tm_properties files prepended to the environment's GOPATH
 ENV['GOPATH'] = (ENV.has_key?('TM_GOPATH') ? ENV['TM_GOPATH'] : '') +
                 (ENV.has_key?('GOPATH') ? ':' + ENV['GOPATH'] : '')
-                
+
+# Call tool to determine gopath
+if ENV.has_key?('TM_GO_DYNAMIC_GOPATH')
+  Dir.chdir(ENV['TM_DIRECTORY']) do
+    ENV['GOPATH'] = `#{ENV['TM_GO_DYNAMIC_GOPATH']}`.chomp
+  end
+end
+
 module Go
   def Go::go(command, options={})
     # TextMate's special TM_GO or expect 'go' on PATH
     go_cmd = ENV['TM_GO'] || 'go'
+
     TextMate.save_if_untitled('go')
     TextMate::Executor.make_project_master_current_document
 
@@ -30,10 +38,21 @@ module Go
       opts[:chdir] = directory
     end
 
-    if command == 'run' || !directory
+    # Call tool to determine package; default to directory name
+    pkg = directory
+    if ENV.has_key?('TM_GO_DYNAMIC_PKG')
+      Dir.chdir(ENV['TM_DIRECTORY']) do
+        pkg = `#{ENV['TM_GO_DYNAMIC_PKG']}`.chomp
+        pkg = nil if pkg == nil || pkg.empty?
+      end
+    end
+
+    if command == 'run' || !pkg
       args.push(ENV['TM_FILEPATH'])
     else
       args.push("-v") # list packages being operated on
+      args.push(pkg)
+      opts[:noun] = pkg
     end
     args.push(opts)
 
@@ -90,5 +109,60 @@ module Go
       TextMate::Executor.run(*args)
       TextMate.exit_show_html
     end
+  end
+
+  def Go::goimports
+    gofmt_cmd = ENV['TM_GOIMPORTS'] || 'goimports'
+    TextMate.save_if_untitled('go')
+
+    args = []
+    args.push(gofmt_cmd)
+    args.push(ENV['TM_FILEPATH'])
+
+    out, err = TextMate::Process.run(*args)
+
+    if err.nil? || err == ''
+      puts out
+    else
+      args << {:use_hashbang => false, :version_args => ['version'], :version_regex => /\Ago version (.*)/}
+      TextMate::Executor.run(*args)
+      TextMate.exit_show_html
+    end
+  end
+
+  def Go::golint
+    gofmt_cmd = ENV['TM_GOIMPORTS'] || 'goimports'
+    TextMate.save_if_untitled('go')
+
+    args = []
+    args.push(gofmt_cmd)
+    args.push(ENV['TM_FILEPATH'])
+
+    out, err = TextMate::Process.run(*args)
+
+    if err.nil? || err == ''
+      puts out
+    else
+      args << {:use_hashbang => false, :version_args => ['version'], :version_regex => /\Ago version (.*)/}
+      TextMate::Executor.run(*args)
+      TextMate.exit_show_html
+    end
+  end
+
+  def Go::golint
+    golint = ENV['TM_GOLINT'] || 'golint'
+    TextMate.save_if_untitled('go')
+    TextMate::Executor.make_project_master_current_document
+
+    args = Array.new
+    opts = {:use_hashbang => false, :version_args => ['version'], :version_regex => /\Ago version (.*)/, :verb => 'Linting'}
+
+    file_length = ENV['TM_DIRECTORY'].length + 1
+    go_file = ENV['TM_FILEPATH'][file_length..-1]
+    args.push(go_file)
+    opts[:chdir] = ENV['TM_DIRECTORY']
+    args.push(opts)
+
+    TextMate::Executor.run(golint, *args)
   end
 end
