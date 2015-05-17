@@ -1,3 +1,6 @@
+## Moved to https://launchpad.net/golang.tmbundle
+
+
 ## golang.tmbundle v3.2.0
 (a TextMate 2 bundle for the go programming language)
 
